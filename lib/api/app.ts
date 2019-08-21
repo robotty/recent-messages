@@ -1,7 +1,7 @@
 import { ChatClient } from "dank-twitch-irc";
 import * as express from "express";
 import { Express } from "express";
-import { register, Registry } from "prom-client";
+import { Registry } from "prom-client";
 import { ChannelStorage } from "../data/channel-storage";
 import { MessageStorage } from "../data/message-storage";
 import { ExpressMetricsBundle } from "../metrics/express";
@@ -25,9 +25,6 @@ export class ApiApp {
     );
 
     this.app.use("/metrics", expressMetrics.requestHandler);
-    this.app.use("/metrics2", (req, res) => {
-      res.contentType("text/plain").send(register.metrics());
-    });
 
     this.app.use(["/api/v1", "/v1"], (req, res, next) => {
       // @ts-ignore apiVersion does not exist on Request
