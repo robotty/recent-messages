@@ -1,0 +1,16 @@
+[Unit]
+Description=Recent messages buffer service
+
+[Service]
+Type=simple
+Restart=always
+User=recent_messages
+Group=recent_messages
+Environment=NODE_ENV=production
+Environment=DEBUG_HIDE_DATE=true
+WorkingDirectory=/opt/recent-messages
+ExecStart=/usr/bin/node /opt/recent-messages/dist/bin/recent-messages.js
+RuntimeDirectory=recent-messages
+
+[Install]
+WantedBy=multi-user.target

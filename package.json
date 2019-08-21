@@ -1,0 +1,83 @@
+{
+  "name": "recent-messages",
+  "version": "1.0.0",
+  "description": "Recent messages bot and web service for twitch.tv",
+  "main": "dist/bin/recent-messages.js",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint --ext .ts .",
+    "eslint": "eslint --format codeframe --ext .ts --ext .",
+    "tslint": "tslint --project .",
+    "lintfix": "npm run eslint -- --fix && npm run tslint -- --fix",
+    "test": "echo \"No tests specified\" && exit 1",
+    "clean": "rm -rf ./dist",
+    "prettier-watch": "onchange -v \"**/*.ts\" \"**/*.js\" -- prettier --write {{changed}}"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robotty/recent-messages.git"
+  },
+  "keywords": [
+    "twitch",
+    "irc"
+  ],
+  "author": "Ruben Anders",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/robotty/recent-messages/issues"
+  },
+  "homepage": "https://github.com/robotty/recent-messages#readme",
+  "devDependencies": {
+    "@types/debug": "^4.1.5",
+    "@types/duplexify": "^3.6.0",
+    "@types/express": "^4.17.1",
+    "@types/express-promise-router": "^2.0.1",
+    "@types/hapi__joi": "^15.0.3",
+    "@types/http-status-codes": "^1.2.0",
+    "@types/ioredis": "^4.0.15",
+    "@types/joi": "^14.3.3",
+    "@types/moment": "^2.13.0",
+    "@types/node": "^12.7.2",
+    "@types/on-finished": "^2.3.1",
+    "@types/pg": "^7.11.0",
+    "@types/pretty-ms": "^5.0.1",
+    "@types/prometheus-gc-stats": "^0.6.1",
+    "@types/umzug": "^2.2.2",
+    "@types/uuid": "^3.4.5",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/eslint-plugin-tslint": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
+    "eslint": "^6.2.1",
+    "eslint-config-prettier": "^6.1.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "prettier": "^1.18.2",
+    "ts-toolbelt": "^3.8.3",
+    "tslint": "^5.19.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "@hapi/joi": "^15.1.1",
+    "@robotty/umzug-postgres-storage": "^3.0.3",
+    "clarify": "^2.1.0",
+    "dank-twitch-irc": "^2.5.2",
+    "debug-logger": "^0.4.1",
+    "eventemitter3": "^4.0.0",
+    "express": "^4.17.1",
+    "express-joi-validation": "^2.0.0",
+    "express-prom-bundle": "^5.1.5",
+    "express-promise-router": "^3.0.3",
+    "ioredis": "^4.14.0",
+    "lodash": "^4.17.15",
+    "make-error-cause": "^2.2.1",
+    "moment": "^2.24.0",
+    "on-finished": "^2.3.0",
+    "pg": "^7.12.1",
+    "pretty-ms": "^5.0.0",
+    "prom-client": "^11.5.3",
+    "prometheus-gc-stats": "^0.6.2",
+    "source-map-support": "^0.5.13",
+    "umzug": "^2.2.0",
+    "uuid": "^3.3.3"
+  }
+}
