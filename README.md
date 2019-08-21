@@ -8,7 +8,8 @@ messages for chat clients to use when they join a channel.
 I kindly ask all application implementers to set the `User-Agent` HTTP header properly to the
 name of their application.
 
-- GET `/api/v2/recent-messages/:channelName`
+- **GET `/api/v2/recent-messages/:channelName`**
+
   Get the recent messages in the given channel. Response is JSON of this format:
 
   ```json
@@ -58,7 +59,9 @@ name of their application.
   @rm-deleted=1;rm-received-ts=1566418181479;historical=1;badge-info=subscriber...
   ```
 
-- `/metrics` - Dump a list of metrics to be consumed by a prometheus instance.
+- **GET `/metrics`**
+
+  Dump a list of metrics to be consumed by a prometheus instance.
 
 # Database setup
 
