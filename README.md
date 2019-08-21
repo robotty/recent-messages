@@ -11,7 +11,7 @@ Please see [the `LICENSE` file](./LICENSE) for more details and
 
 # API
 
-I kindly ask all application implementers to set the `User-Agent` HTTP header
+I kindly ask consumers/clients of this API to set the `User-Agent` HTTP header
 properly to the name of their application.
 
 - **GET `/api/v2/recent-messages/:channelName`**
