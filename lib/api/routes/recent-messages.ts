@@ -124,7 +124,6 @@ export class RecentMessagesRoute {
       // channel is not touched/added if join fails, so
       // suspended/invalid channels get wiped from the storage
       // after some time/not joined at all
-      log.debug("touching channel", channelName);
       await this.channelStorage.touchOrAdd(channelName);
     }
   }
