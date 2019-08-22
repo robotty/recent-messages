@@ -36,6 +36,7 @@ const exportedMessageTypes: string[] = [
 
 export function makeFramesToAppend(
   msg: IRCMessage,
+  createTime: number,
   options: ContainerAppendOptions
 ): ContainerFrame[] {
   if (!exportedMessageTypes.includes(msg.ircCommand)) {
@@ -71,7 +72,7 @@ export function makeFramesToAppend(
     }
 
     if (msg instanceof NoticeMessage) {
-      return [noticeToPrivmsgFrame(msg)];
+      return [noticeToPrivmsgFrame(msg, createTime)];
     }
 
     // bail out. Type cannot be converted and will be omitted.

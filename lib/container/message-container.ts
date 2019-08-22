@@ -85,13 +85,14 @@ export class MessageContainer {
 
   public append(retrievedMsg: RetrievedMessage): void {
     const msg: IRCMessage = parseTwitchMessage(retrievedMsg.message);
+    const createTime = retrievedMsg.createTime;
 
     // if this is a CLEARCHAT or CLEARMSG, the messages matching it are marked as rm-deleted=1
     this.applyDeletion(msg);
 
     // this applies to options (e.g. clearchat to notice) and produces the frames to
     // present to the user
-    const framesToAppend = makeFramesToAppend(msg, this.options);
+    const framesToAppend = makeFramesToAppend(msg, createTime, this.options);
 
     for (const frame of framesToAppend) {
       frame.originalMessage = msg;
