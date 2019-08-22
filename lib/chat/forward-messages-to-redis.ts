@@ -1,5 +1,4 @@
-import { ChatClient } from "dank-twitch-irc";
-import { ChannelIRCMessage } from "dank-twitch-irc/dist/message/irc/channel-irc-message";
+import { ChannelIRCMessage, ChatClient, NoticeMessage } from "dank-twitch-irc";
 import * as debugLogger from "debug-logger";
 import { MessageStorage } from "../data/message-storage";
 
@@ -10,12 +9,14 @@ export function forwardMessagesToRedis(
   messageStorage: MessageStorage
 ): void {
   client.on("message", msg => {
-    if (!(msg instanceof ChannelIRCMessage)) {
+    if ((msg as ChannelIRCMessage | NoticeMessage).channelName == null) {
       return;
     }
 
-    messageStorage.appendMessage(msg.channelName, msg.rawSource).catch(e => {
-      log.warn("Error appending message to redis", e);
-    });
+    messageStorage
+      .appendMessage((msg as ChannelIRCMessage).channelName, msg.rawSource)
+      .catch(e => {
+        log.warn("Error appending message to redis", e);
+      });
   });
 }
