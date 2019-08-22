@@ -52,10 +52,10 @@ export class ChannelStorage {
       const result = await conn.query({
         name: "channels-to-join",
         text: `
-                    SELECT channel_name
-                    FROM channel
-                    WHERE NOT ignored
-                      AND NOT now() - last_access >= make_interval(secs => $1)
+          SELECT channel_name
+          FROM channel
+          WHERE NOT ignored
+            AND NOT now() - last_access >= make_interval(secs => $1)
                 `,
         // asSeconds() returns double-precision seconds
         values: [this.channelExpiry.asSeconds()]
@@ -68,10 +68,10 @@ export class ChannelStorage {
     return await this.queryAffectedRows({
       name: "insert-channel-if-not-exists",
       text: `
-                INSERT INTO channel (channel_name)
-                VALUES ($1)
-                ON CONFLICT ON CONSTRAINT channel_pkey DO UPDATE
-                    SET last_access = now()
+        INSERT INTO channel (channel_name)
+        VALUES ($1)
+        ON CONFLICT ON CONSTRAINT channel_pkey DO UPDATE
+            SET last_access = now()
             `,
       values: [channel]
     });
@@ -81,10 +81,10 @@ export class ChannelStorage {
     return await this.queryAffectedRows({
       name: "ignore-channel",
       text: `
-                INSERT INTO channel (channel_name, ignored)
-                VALUES ($1, TRUE)
-                ON CONFLICT ON CONSTRAINT channel_pkey DO UPDATE
-                    SET ignored = TRUE
+        INSERT INTO channel (channel_name, ignored)
+        VALUES ($1, TRUE)
+        ON CONFLICT ON CONSTRAINT channel_pkey DO UPDATE
+            SET ignored = TRUE
             `,
       values: [channel]
     });
@@ -99,11 +99,11 @@ export class ChannelStorage {
       const result = await conn.query({
         name: "channels-to-part",
         text: `
-                    SELECT channel_name
-                    FROM channel
-                    WHERE NOT ignored
-                      AND to_timestamp($1) - last_access < make_interval(secs => $2)
-                      AND now() - last_access >= make_interval(secs => $2)
+          SELECT channel_name
+          FROM channel
+          WHERE NOT ignored
+            AND to_timestamp($1) - last_access < make_interval(secs => $2)
+            AND now() - last_access >= make_interval(secs => $2)
                 `,
         // asSeconds() returns double-precision seconds
         values: [lastQuery, this.channelExpiry.asSeconds()]
