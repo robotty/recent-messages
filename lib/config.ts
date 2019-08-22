@@ -26,14 +26,14 @@ export interface AppConfiguration {
 
 const configDefaults: AppConfiguration = {
   httpServerOptions: {
-    path: "/var/run/recent-messages/recent-messages.sock",
+    path: "/var/run/recent-messages/server.sock",
     readableAll: true,
     writableAll: true
   },
   ircClientConfig: {},
   databaseConfig: {
     host: "/var/run/postgresql",
-    database: "recent-messages"
+    database: "recent_messages"
   },
   redisConfig: {
     path: "/var/run/redis/redis-server.sock"
