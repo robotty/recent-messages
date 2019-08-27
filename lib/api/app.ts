@@ -1,3 +1,4 @@
+import cors = require("cors");
 import { ChatClient } from "dank-twitch-irc";
 import * as express from "express";
 import { Express } from "express";
@@ -18,6 +19,8 @@ export class ApiApp {
     metricsRegistry: Registry
   ) {
     this.app = express();
+
+    this.app.use(cors());
 
     const expressMetrics = ExpressMetricsBundle.instrument(
       this.app,
