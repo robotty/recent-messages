@@ -44,7 +44,7 @@ const configDefaults: AppConfiguration = {
 export function loadConfig(): AppConfiguration {
   let partialConfig: Partial<AppConfiguration>;
   try {
-    partialConfig = require("../config.js");
+    partialConfig = require("../config");
   } catch (e) {
     log.warn(
       "No configuration at config.js found (or failed to load), falling back to all defaults."
