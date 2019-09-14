@@ -67,7 +67,6 @@ export class RecentMessagesRoute {
       throw new StatusCodeError(400, "Invalid channel name format");
     }
 
-    log.time("check_ignore_" + channelName);
     const isIgnored = await this.channelStorage.isIgnored(channelName);
     if (isIgnored) {
       throw new StatusCodeError(
@@ -75,27 +74,21 @@ export class RecentMessagesRoute {
         "This channel is excluded from this service"
       );
     }
-    log.timeEnd("check_ignore_" + channelName);
 
-    log.time("message_retrieve_" + channelName);
     const retrievedMessages = await this.messageStorage.getMessages(
       channelName
     );
-    log.timeEnd("message_retrieve_" + channelName);
 
-    log.time("message_append_" + channelName);
     const container = new MessageContainer({
       clearchatToNotice: req.query.clearchatToNotice,
       hideModerationMessages: req.query.hideModerationMessages,
       hideModeratedMessages: req.query.hideModeratedMessages
     });
     retrievedMessages.forEach(msg => container.append(msg));
-    log.timeEnd("message_append_" + channelName);
 
     const sentMessages = container.export();
     let error: string | null = null;
 
-    log.time("join_" + channelName);
     if (!this.chatClient.wantedChannels.has(channelName)) {
       try {
         await this.chatClient.join(channelName);
@@ -107,7 +100,6 @@ export class RecentMessagesRoute {
         }
       }
     }
-    log.timeEnd("join_" + channelName);
 
     if (error == null && !this.chatClient.joinedChannels.has(channelName)) {
       error =
