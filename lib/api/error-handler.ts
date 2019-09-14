@@ -9,9 +9,9 @@ import {
 import { STATUS_CODES as statusCodes } from "http";
 import { StatusCodeError } from "./status-error";
 
-export function registerDefaultErrorHandler(app: Express): void {
-  const log = debugLogger("recent-messages:app");
+const log = debugLogger("recent-messages:app");
 
+export function registerDefaultErrorHandler(app: Express): void {
   const errorHandler: ErrorRequestHandler = (
     err: Error,
     req: Request,
@@ -21,8 +21,6 @@ export function registerDefaultErrorHandler(app: Express): void {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     next: NextFunction
   ): void => {
-    log.warn("Error in request handler", err);
-
     let statusToSend: number;
     let canSendMessage: boolean;
     if (err instanceof StatusCodeError) {
@@ -31,6 +29,10 @@ export function registerDefaultErrorHandler(app: Express): void {
     } else {
       statusToSend = 500;
       canSendMessage = false;
+    }
+
+    if (statusToSend > 500 && statusToSend < 600) {
+      log.warn("Error in request handler", err);
     }
 
     const json = {

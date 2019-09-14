@@ -1,6 +1,6 @@
 # recent-messages
 
-Twitch IRC bot and web service that serves the last N (currently 500) messages
+Twitch IRC bot and web service that serves the last N (by default 500) messages
 for chat clients to use when they join a channel.
 
 If you plan to host a modified variant of this service yourself, please remember
@@ -28,12 +28,35 @@ properly to the name of their application.
     "error": null
   }
   ```
+  
+  The API returns `PRIVMSG`, `CLEARCHAT`, `CLEARMSG`, `USERNOTICE`, `NOTICE` and `ROOMSTATE` messages.
 
   This format is always returned, even on error (`messages` may be empty,
   though). `error` is either `null` or a string with an error message.
+  The API will return `200 OK` but with an `error` value set in conditions where messages can still exist/
+  be retrieved, but there might be an error preventing the service from collecting messages from that channel.
+  (E.g. when you try to fetch messages for a suspended channel, or while the service is reconnecting to that
+  channel)
 
-  If the input `channelName` is of invalid format, no messages are returned and
-  the `error` is set.
+  However, if the input `channelName` is of invalid format, you will get a `400 Bad Request` error:
+
+  ```json
+  {
+    "status": 400,
+    "statusMessage": "Bad Request",
+    "error": "Invalid channel name format"
+  }
+  ```
+  
+  If the input `channelName` is ignored by the bot, you will get a `403 Forbidden` error:
+
+  ```json
+  {
+    "status": 403,
+    "statusMessage": "Forbidden",
+    "error": "This channel is excluded from this service"
+  }
+  ```
 
   This endpoint supports the following optional query parameters:
 
@@ -48,13 +71,9 @@ properly to the name of their application.
 
   - `?hideModerationMessages=true` - Omit all `CLEARCHAT` and `CLEARMSG`
     messages. This option can be combined with other options altering the
-    message rendering such as `clearchatToNotice` and `privmsgOnly`.
+    message rendering such as `clearchatToNotice`.
   - `?hideModeratedMessages=true` - Omit all messages that were deleted by
     `CLEARCHAT` or `CLEARMSG` messages.
-  - `?privmsgOnly=true` - Convert all `CLEARCHAT`, `NOTICE` and `USERNOTICE`
-    messages into fake `PRIVMSG` messages coming from fake users. This option is
-    retained for compatibility with early development versions of chatterino2
-    and may be deprecated and ultimately removed in a future release.
 
   Additionally, _all_ messages have the extra `rm-received-ts` (Time when the
   service received the message, milliseconds since the UTC epoch) and the

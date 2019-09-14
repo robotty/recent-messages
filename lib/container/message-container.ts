@@ -1,4 +1,3 @@
-import { parseIRCMessage } from "dank-twitch-irc";
 import { IRCMessage } from "dank-twitch-irc/dist/message/irc/irc-message";
 import { IRCMessageTags } from "dank-twitch-irc/dist/message/irc/tags";
 import { parseTwitchMessage } from "dank-twitch-irc/dist/message/parser/twitch-message";
@@ -47,7 +46,6 @@ enum KnownExtraTags {
 
 export interface ContainerAppendOptions {
   clearchatToNotice: boolean;
-  privmsgOnly: boolean;
   hideModerationMessages: boolean;
   hideModeratedMessages: boolean;
 }

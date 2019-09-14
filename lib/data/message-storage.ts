@@ -26,11 +26,12 @@ export interface RetrievedMessage extends StoredMessage {
 
 export class MessageStorage {
   public redisNamespace = "recent-messages";
-  public bufferSize = 500;
   private readonly redisClient: Redis;
+  private readonly bufferSize: number;
 
-  public constructor(redisClient: Redis) {
+  public constructor(redisClient: Redis, bufferSize: number) {
     this.redisClient = redisClient;
+    this.bufferSize = bufferSize;
   }
 
   public async appendMessage(

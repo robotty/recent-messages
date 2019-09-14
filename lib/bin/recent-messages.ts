@@ -25,6 +25,7 @@ import { ApiApp } from "../api/app";
 import { HttpServer } from "../api/server";
 import { startChannelControl } from "../chat/channel-control";
 import { forwardMessagesToRedis } from "../chat/forward-messages-to-redis";
+import { startInteractiveBot } from "../chat/interactive-bot";
 import { startChatClient } from "../chat/start-client";
 import { AppConfiguration, loadConfig } from "../config";
 import { ChannelStorage } from "../data/channel-storage";
@@ -44,7 +45,7 @@ const config: AppConfiguration = loadConfig();
   await redisClient.connect();
 
   const channelStorage = new ChannelStorage(db, config.channelExpiry);
-  const messageStorage = new MessageStorage(redisClient);
+  const messageStorage = new MessageStorage(redisClient, config.bufferSize);
 
   const chatClient = await startChatClient(config.ircClientConfig);
 
@@ -55,6 +56,20 @@ const config: AppConfiguration = loadConfig();
 
   await startChannelControl(chatClient, channelStorage, messageStorage);
   forwardMessagesToRedis(chatClient, messageStorage);
+  if (config.interactiveBot.enabled) {
+    log.info("Starting interactive bot");
+    startInteractiveBot(
+      config.interactiveBot.ircClientConfig,
+      chatClient,
+      channelStorage,
+      messageStorage
+    );
+  } else {
+    log.info(
+      "Interactive bot not configured or not enabled, " +
+        "it will not be started"
+    );
+  }
 
   const { app } = new ApiApp(
     channelStorage,

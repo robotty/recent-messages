@@ -1,8 +1,6 @@
 import { ParseError } from "dank-twitch-irc/dist/message/parser/parse-error";
-import { getTagString } from "dank-twitch-irc/dist/message/parser/tag-values";
 import { ClearchatMessage } from "dank-twitch-irc/dist/message/twitch-types/clearchat";
 import * as prettyMs from "pretty-ms";
-import * as randomUUID from "uuid/v4";
 import { ContainerFrame, newFrame } from "./message-container";
 
 export function stringifyClearchat(msg: ClearchatMessage): string {
@@ -34,17 +32,4 @@ export function clearchatToNoticeFrame(msg: ClearchatMessage): ContainerFrame {
   }
 
   return frame;
-}
-
-export function clearchatToPrivmsgFrame(msg: ClearchatMessage): ContainerFrame {
-  return newFrame(
-    "@badge-info=;badges=twitchbot/1;color=#613FA0;display-name=CLEARCHAT;" +
-      `emotes=;flags=;id=${randomUUID()};mod=0;room-id=${
-        msg.ircTags["room-id"]
-      };subscriber=0;` +
-      `tmi-sent-ts=${getTagString(msg.ircTags, "tmi-sent-ts")};` +
-      `turbo=0;user-id=76330814;user-type= :clearchat!clearchat@` +
-      `clearchat.tmi.twitch.tv PRIVMSG #${msg.channelName} :` +
-      stringifyClearchat(msg)
-  );
 }

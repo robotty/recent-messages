@@ -6,10 +6,7 @@ import * as debugLogger from "debug-logger";
 import { Request, Response, Router } from "express";
 import { createValidator } from "express-joi-validation";
 import PromiseRouter from "express-promise-router";
-import {
-  ContainerAppendOptions,
-  MessageContainer
-} from "../../container/message-container";
+import { ContainerAppendOptions, MessageContainer } from "../../container/message-container";
 import { ChannelStorage } from "../../data/channel-storage";
 import { MessageStorage } from "../../data/message-storage";
 import { StatusCodeError } from "../status-error";
@@ -47,7 +44,6 @@ export class RecentMessagesRoute {
 
     const querySchema = Joi.object({
       clearchatToNotice: Joi.boolean().default(false),
-      privmsgOnly: Joi.boolean().default(false),
       hideModerationMessages: Joi.boolean().default(false),
       hideModeratedMessages: Joi.boolean().default(false)
     });
@@ -71,35 +67,35 @@ export class RecentMessagesRoute {
       throw new StatusCodeError(400, "Invalid channel name format");
     }
 
-    let options: ContainerAppendOptions;
-
-    // @ts-ignore apiVersion does not exist on Request
-    if (req.apiVersion === 1) {
-      options = {
-        clearchatToNotice: false,
-        privmsgOnly: true,
-        hideModerationMessages: false,
-        hideModeratedMessages: false
-      };
-    } else {
-      options = {
-        clearchatToNotice: req.query.clearchatToNotice,
-        privmsgOnly: req.query.privmsgOnly,
-        hideModerationMessages: req.query.hideModerationMessages,
-        hideModeratedMessages: req.query.hideModeratedMessages
-      };
+    log.time("check_ignore_" + channelName);
+    const isIgnored = await this.channelStorage.isIgnored(channelName);
+    if (isIgnored) {
+      throw new StatusCodeError(
+        403, // forbidden
+        "This channel is excluded from this service"
+      );
     }
+    log.timeEnd("check_ignore_" + channelName);
 
+    log.time("message_retrieve_" + channelName);
     const retrievedMessages = await this.messageStorage.getMessages(
       channelName
     );
+    log.timeEnd("message_retrieve_" + channelName);
 
-    const container = new MessageContainer(options);
+    log.time("message_append_" + channelName);
+    const container = new MessageContainer({
+      clearchatToNotice: req.query.clearchatToNotice,
+      hideModerationMessages: req.query.hideModerationMessages,
+      hideModeratedMessages: req.query.hideModeratedMessages
+    });
     retrievedMessages.forEach(msg => container.append(msg));
+    log.timeEnd("message_append_" + channelName);
 
     const sentMessages = container.export();
     let error: string | null = null;
 
+    log.time("join_" + channelName);
     if (!this.chatClient.wantedChannels.has(channelName)) {
       try {
         await this.chatClient.join(channelName);
@@ -111,6 +107,7 @@ export class RecentMessagesRoute {
         }
       }
     }
+    log.timeEnd("join_" + channelName);
 
     if (error == null && !this.chatClient.joinedChannels.has(channelName)) {
       error =

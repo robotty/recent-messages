@@ -15,6 +15,10 @@ export function setDefaults<T>(input: Partial<T> = {}, defaults: T): T {
 export interface AppConfiguration {
   httpServerOptions: ListenOptions;
   ircClientConfig: ClientConfiguration;
+  interactiveBot: {
+    enabled: boolean;
+    ircClientConfig: ClientConfiguration;
+  };
   databaseConfig: PoolConfig;
   redisConfig: RedisOptions;
 
@@ -22,6 +26,7 @@ export interface AppConfiguration {
    * If a channel's recent messages were not accessed for this long, the channel is subject to be parted
    */
   channelExpiry: Duration;
+  bufferSize: number;
 }
 
 const configDefaults: AppConfiguration = {
@@ -31,6 +36,10 @@ const configDefaults: AppConfiguration = {
     writableAll: true
   },
   ircClientConfig: {},
+  interactiveBot: {
+    enabled: false,
+    ircClientConfig: {}
+  },
   databaseConfig: {
     host: "/var/run/postgresql",
     database: "recent_messages"
@@ -38,7 +47,8 @@ const configDefaults: AppConfiguration = {
   redisConfig: {
     path: "/var/run/redis/redis-server.sock"
   },
-  channelExpiry: moment.duration(1, "week")
+  channelExpiry: moment.duration(1, "week"),
+  bufferSize: 500
 };
 
 export function loadConfig(): AppConfiguration {
@@ -47,7 +57,8 @@ export function loadConfig(): AppConfiguration {
     partialConfig = require("../config");
   } catch (e) {
     log.warn(
-      "No configuration at config.js found (or failed to load), falling back to all defaults."
+      "No configuration at config.js found (or failed to load), falling back to all defaults.",
+      e
     );
     partialConfig = {};
   }
