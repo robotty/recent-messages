@@ -44,26 +44,39 @@ export function startInteractiveBot(
 
     if (command === "!help") {
       return (
-        "I am the interactive chatbot for the recent_messages service. My commands are !ignoreme and " +
-        "!addme, to ignore/re-add your own channel, respectively. SeemsGood Other commands:" +
-        " !ping and !help - More about the service: https://github.com/robotty/recent-messages"
+        "I am the interactive chatbot for the recent_messages service. My commands are !ignoreme, !wipeme and " +
+        "!addme, to ignore/re-add your own channel, respectively. SeemsGood " +
+        "More about this bot: https://www.twitch.tv/recent_messages"
       );
     }
 
     if (command === "!ignoreme") {
       if (await channelStorage.isIgnored(msg.senderUsername)) {
-        return "your channel is already ignored! BrokeBack Type !addme if you want to remove your ignore.";
+        return "Your channel is already ignored! BrokeBack Type !addme if you want to remove your ignore.";
       }
 
       await channelStorage.setIgnoreStatus(msg.senderUsername, true);
       await mainChatClient.part(msg.senderUsername);
       await messageStorage.deleteMessages(msg.senderUsername);
-      return "the bot will now no longer listen to messages in your channel, and all message data has been deleted! SeemsGood";
+      return "The bot will now no longer listen to messages in your channel, and all message data has been deleted! SeemsGood";
+    }
+
+    if (command === "!wipeme") {
+      if (await channelStorage.isIgnored(msg.senderUsername)) {
+        return (
+          "Your channel is ignored, so the service doesnt have any " +
+          "messages for your channel! BrokeBack Type !addme " +
+          "if you want to remove your ignore."
+        );
+      }
+
+      await messageStorage.deleteMessages(msg.senderUsername);
+      return "Got it! Deleted all messages stored for your channel.";
     }
 
     if (command === "!addme") {
       if (mainChatClient.joinedChannels.has(msg.senderUsername)) {
-        return "the bot is already listening in your channel! Type !removeme if you want to have your channel ignored. OpieOP";
+        return "The bot is already listening in your channel! Type !removeme if you want to have your channel ignored. OpieOP";
       }
 
       await channelStorage.touchOrAdd(msg.senderUsername);
