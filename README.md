@@ -3,15 +3,21 @@
 Twitch IRC bot and web service that serves the last N (by default 500) messages
 for chat clients to use when they join a channel.
 
-If you plan to host a modified variant of this service yourself, please remember
-it is licensed under the GNU AGPL v3 (or later).
+If you are a twitch user and you are concerned about your privacy and how to opt out, see the
+[privacy statement](https://recent-messages.robotty.de/privacy) and the automated optout service
+at https://www.twitch.tv/recent_messages
 
-Please see [the `LICENSE` file](./LICENSE) for more details and
+If you want to use the API/service, see below for the API docs.
+
+If you plan to host a modified variant of this service yourself, please remember
+it is licensed under the GNU AGPL v3 (or later). Please see [the `LICENSE` file](./LICENSE) for more details and
 [this quick summary](<https://tldrlegal.com/license/gnu-affero-general-public-license-v3-(agpl-3.0)>).
 
 ## API
 
 API Base URL: `https://recent-messages.robotty.de`
+
+CORS is enabled for all origins.
 
 I kindly ask consumers/clients of this API to set the `User-Agent` HTTP header
 properly to the name of their application.
