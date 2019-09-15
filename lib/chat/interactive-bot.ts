@@ -22,7 +22,7 @@ export function startInteractiveBot(
   interactiveChatClient.on("error", e =>
     log.error("Error in interactive chat client", e)
   );
-  mainChatClient.join(config.username!);
+  interactiveChatClient.join(config.username!);
 
   const handleCommand = async (
     msg: PrivmsgMessage | WhisperMessage
@@ -112,5 +112,5 @@ export function startInteractiveBot(
   };
 
   interactiveChatClient.on("WHISPER", handleEvent);
-  mainChatClient.on("PRIVMSG", handleEvent);
+  interactiveChatClient.on("PRIVMSG", handleEvent);
 }
