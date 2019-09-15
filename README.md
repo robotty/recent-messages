@@ -9,7 +9,9 @@ it is licensed under the GNU AGPL v3 (or later).
 Please see [the `LICENSE` file](./LICENSE) for more details and
 [this quick summary](<https://tldrlegal.com/license/gnu-affero-general-public-license-v3-(agpl-3.0)>).
 
-# API
+## API
+
+API Base URL: `https://recent-messages.robotty.de`
 
 I kindly ask consumers/clients of this API to set the `User-Agent` HTTP header
 properly to the name of their application.
@@ -94,7 +96,7 @@ properly to the name of their application.
 
   Dump a list of metrics to be consumed by a prometheus instance.
 
-# Database setup
+## Database setup
 
 ```bash
 sudo -u postgres psql
@@ -103,7 +105,7 @@ sudo -u postgres psql
 #> \q
 ```
 
-# System setup
+## System setup
 
 ```bash
 sudo adduser --system --home /opt/recent-messages \
@@ -112,13 +114,13 @@ sudo adduser --system --home /opt/recent-messages \
   recent_messages
 ```
 
-# Install production dependencies
+## Install production dependencies
 
 ```bash
 npm i --production
 ```
 
-# systemd install
+## systemd install
 
 ```bash
 sudo cp ./recent-messages.service /etc/systemd/system/recent-messages.service
@@ -127,7 +129,7 @@ sudo systemctl enable recent-messages
 sudo systemctl start recent-messages
 ```
 
-# nginx config
+## nginx config
 
 ```bash
 sudo cp ./install/nginx/recent-messages.example.com /etc/nginx/sites-available/recent-messages.yourdomain.com
@@ -137,6 +139,6 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-# Grafana dashboard
+## Grafana dashboard
 
 Import `./install/grafana/recent-messages.json` via the "Import dashboard" page.
