@@ -66,6 +66,7 @@ export function startInteractiveBot(
         return "the bot is already listening in your channel! Type !removeme if you want to have your channel ignored. OpieOP";
       }
 
+      await channelStorage.touchOrAdd(msg.senderUsername);
       const wasIgnored = await channelStorage.isIgnored(msg.senderUsername);
       await mainChatClient.join(msg.senderUsername);
       if (wasIgnored) {
