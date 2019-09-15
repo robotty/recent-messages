@@ -70,7 +70,7 @@ export function startInteractiveBot(
       }
 
       await messageStorage.deleteMessages(msg.senderUsername);
-      return "Got it! Deleted all messages stored for your channel.";
+      return "Got it! Deleted all messages stored for your channel. BibleThump";
     }
 
     if (command === "!addme") {
