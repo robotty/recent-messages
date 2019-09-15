@@ -45,8 +45,7 @@ export function startInteractiveBot(
     if (command === "!help") {
       return (
         "I am the interactive chatbot for the recent_messages service. My commands are !ignoreme, !wipeme and " +
-        "!addme, to ignore/re-add your own channel, respectively. SeemsGood " +
-        "More about this bot: https://www.twitch.tv/recent_messages"
+        "!addme SeemsGood More about this bot and the commands: https://www.twitch.tv/recent_messages"
       );
     }
 
