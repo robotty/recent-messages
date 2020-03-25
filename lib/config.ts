@@ -26,6 +26,7 @@ export interface AppConfiguration {
    * If a channel's recent messages were not accessed for this long, the channel is subject to be parted
    */
   channelExpiry: Duration;
+  messageExpiry: Duration;
   bufferSize: number;
 }
 
@@ -48,6 +49,7 @@ const configDefaults: AppConfiguration = {
     path: "/var/run/redis/redis-server.sock"
   },
   channelExpiry: moment.duration(1, "week"),
+  messageExpiry: moment.duration(1, "week"),
   bufferSize: 500
 };
 

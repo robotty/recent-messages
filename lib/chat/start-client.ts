@@ -1,4 +1,4 @@
-import { ChatClient } from "dank-twitch-irc";
+import { ChatClient, PartError } from "dank-twitch-irc";
 import { ClientConfiguration } from "dank-twitch-irc/dist/config/config";
 import { JoinError } from "dank-twitch-irc/dist/operations/join";
 import * as debugLogger from "debug-logger";
@@ -14,6 +14,9 @@ export async function startChatClient(
   client.on("error", e => {
     if (e instanceof JoinError) {
       log.debug("Channel %s could not be joined.", e.failedChannelName);
+      return;
+    }
+    if (e instanceof PartError) {
       return;
     }
 

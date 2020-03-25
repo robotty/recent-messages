@@ -51,10 +51,16 @@ const config: AppConfiguration = loadConfig();
 
   const metricsRegistry = new Registry();
   ChatClientMetricsBundle.instrument(chatClient, metricsRegistry);
-  collectDefaultMetrics({ register: metricsRegistry, timeout: 10 * 1000 });
+  collectDefaultMetrics({ register: metricsRegistry });
   gcStats(metricsRegistry)();
 
-  await startChannelControl(chatClient, channelStorage, messageStorage);
+  await startChannelControl(
+    chatClient,
+    channelStorage,
+    messageStorage,
+    config.messageExpiry,
+    metricsRegistry
+  );
   forwardMessagesToRedis(chatClient, messageStorage);
   if (config.interactiveBot.enabled) {
     log.info("Starting interactive bot");

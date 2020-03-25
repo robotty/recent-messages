@@ -32,6 +32,34 @@ export class MessageStorage {
   public constructor(redisClient: Redis, bufferSize: number) {
     this.redisClient = redisClient;
     this.bufferSize = bufferSize;
+
+    this.redisClient.defineCommand("trimExpiredMessages", {
+      numberOfKeys: 1,
+      lua: `
+local key = KEYS[1]
+local deleteBefore = tonumber(ARGV[1])
+
+local messages = redis.call('LRANGE', key, 0, -1)
+
+for i = #messages, 1, -1 do
+    local message = cjson.decode(messages[i])
+
+    -- if the message should be preserved
+    if message['createTime'] > deleteBefore then
+        local deleted_messages = #messages - i
+
+        -- then trim messages after this one (older messages)
+        if deleted_messages >= 1 then
+            -- we only call redis if there is at least one message to delete
+            redis.call('LTRIM', key, 0, i - 1)
+        end
+
+        return deleted_messages
+    end
+end
+
+return 0`
+    });
   }
 
   public async appendMessage(
@@ -81,6 +109,24 @@ export class MessageStorage {
 
   public async deleteMessages(channelName: string): Promise<void> {
     await this.redisClient.del(this.messagesKey(channelName));
+  }
+
+  public async listChannelsWithMessages(): Promise<string[]> {
+    const keys = await this.redisClient.keys(this.messagesKey("*"));
+    // recent-messages:v2:messages:<channelName> -> everything up to the channel name is cut away.
+    const prefixLength = this.messagesKey("").length;
+    return keys.map(key => key.slice(prefixLength));
+  }
+
+  public async trimExpiredMessages(
+    channelName: string,
+    deleteBefore: number
+  ): Promise<number> {
+    // @ts-ignore trimExpiredMessages does not exist on redisClient
+    return await this.redisClient.trimExpiredMessages(
+      this.messagesKey(channelName),
+      deleteBefore
+    );
   }
 
   private get prefix(): string {
