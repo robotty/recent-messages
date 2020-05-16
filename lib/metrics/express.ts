@@ -3,14 +3,11 @@ import onFinished = require("on-finished");
 import { Histogram, Registry } from "prom-client";
 
 export class ExpressMetricsBundle {
-  private readonly app: Express;
-  private readonly registry: Registry;
-  private readonly metricsPrefix: string;
 
-  constructor(app: Express, registry: Registry, metricsPrefix = "http_") {
-    this.app = app;
-    this.registry = registry;
-    this.metricsPrefix = metricsPrefix;
+  public get requestHandler(): RequestHandler {
+    return (req, res) => {
+      res.contentType("text/plain").send(this.registry.metrics());
+    };
   }
 
   public static instrument(
@@ -23,6 +20,15 @@ export class ExpressMetricsBundle {
     bundle.registerDurationHistogram();
 
     return bundle;
+  }
+  private readonly app: Express;
+  private readonly registry: Registry;
+  private readonly metricsPrefix: string;
+
+  constructor(app: Express, registry: Registry, metricsPrefix = "http_") {
+    this.app = app;
+    this.registry = registry;
+    this.metricsPrefix = metricsPrefix;
   }
 
   private registerDurationHistogram(): void {
@@ -44,11 +50,5 @@ export class ExpressMetricsBundle {
 
       next();
     });
-  }
-
-  public get requestHandler(): RequestHandler {
-    return (req, res) => {
-      res.contentType("text/plain").send(this.registry.metrics());
-    };
   }
 }

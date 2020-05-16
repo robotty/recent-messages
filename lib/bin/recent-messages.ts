@@ -1,5 +1,5 @@
 let defaultLoggerConfig = false;
-if (process.env["DEBUG"] == null) {
+if (process.env.DEBUG == null) {
   process.env.DEBUG = "*,-babel*,-ioredis*,-express*,-*:trace";
   defaultLoggerConfig = true;
 }
@@ -19,8 +19,9 @@ import "clarify";
 import * as IORedis from "ioredis";
 import { fullStack } from "make-error-cause";
 import { Pool } from "pg";
-import "source-map-support/register";
 import { collectDefaultMetrics, Registry } from "prom-client";
+import gcStats = require("prometheus-gc-stats");
+import "source-map-support/register";
 import { ApiApp } from "../api/app";
 import { HttpServer } from "../api/server";
 import { startChannelControl } from "../chat/channel-control";
@@ -32,7 +33,6 @@ import { ChannelStorage } from "../data/channel-storage";
 import { createPoolAndRunMigrations } from "../data/db";
 import { MessageStorage } from "../data/message-storage";
 import { ChatClientMetricsBundle } from "../metrics/chat-client";
-import gcStats = require("prometheus-gc-stats");
 
 const config: AppConfiguration = loadConfig();
 

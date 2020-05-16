@@ -1,11 +1,11 @@
 import { ChatClient, ignoreErrors } from "dank-twitch-irc";
 
 import * as debugLogger from "debug-logger";
+import { Duration } from "moment";
+import * as moment from "moment";
 import { Counter, Registry } from "prom-client";
 import { ChannelStorage } from "../data/channel-storage";
 import { MessageStorage } from "../data/message-storage";
-import { Duration } from "moment";
-import * as moment from "moment";
 
 const log = debugLogger("recent-messages:irc:channels");
 

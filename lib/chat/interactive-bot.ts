@@ -5,8 +5,8 @@ import {
   WhisperMessage
 } from "dank-twitch-irc";
 import * as debugLogger from "debug-logger";
-import { ChannelStorage } from "../data/channel-storage";
 import * as prettyMs from "pretty-ms";
+import { ChannelStorage } from "../data/channel-storage";
 import { MessageStorage } from "../data/message-storage";
 
 const log = debugLogger("recent-messages:interactive-bot");

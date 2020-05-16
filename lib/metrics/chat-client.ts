@@ -2,19 +2,6 @@ import { ChatClient, ClientState } from "dank-twitch-irc";
 import { Counter, Gauge, Registry } from "prom-client";
 
 export class ChatClientMetricsBundle {
-  private readonly chatClient: ChatClient;
-  private readonly registry: Registry;
-  private readonly metricsPrefix: string;
-
-  public constructor(
-    chatClient: ChatClient,
-    registry: Registry,
-    metricsPrefix = "twitch_irc_"
-  ) {
-    this.chatClient = chatClient;
-    this.registry = registry;
-    this.metricsPrefix = metricsPrefix;
-  }
 
   public static instrument(
     chatClient: ChatClient,
@@ -31,6 +18,19 @@ export class ChatClientMetricsBundle {
     bundle.initializeChannelsGauge();
     bundle.initializeConnectionsStats();
     bundle.initializeReconnectCounter();
+  }
+  private readonly chatClient: ChatClient;
+  private readonly registry: Registry;
+  private readonly metricsPrefix: string;
+
+  public constructor(
+    chatClient: ChatClient,
+    registry: Registry,
+    metricsPrefix = "twitch_irc_"
+  ) {
+    this.chatClient = chatClient;
+    this.registry = registry;
+    this.metricsPrefix = metricsPrefix;
   }
 
   private initializeMessageCounter(): void {

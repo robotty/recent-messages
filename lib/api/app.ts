@@ -2,6 +2,8 @@ import cors = require("cors");
 import { ChatClient } from "dank-twitch-irc";
 import * as express from "express";
 import { Express } from "express";
+import * as helmet from "helmet";
+import * as path from "path";
 import { Registry } from "prom-client";
 import { ChannelStorage } from "../data/channel-storage";
 import { MessageStorage } from "../data/message-storage";
@@ -9,8 +11,6 @@ import { ExpressMetricsBundle } from "../metrics/express";
 import { registerDefaultErrorHandler } from "./error-handler";
 import { RecentMessagesRoute } from "./routes/recent-messages";
 import { StatusCodeError } from "./status-error";
-import * as path from "path";
-import * as helmet from "helmet";
 
 export class ApiApp {
   public app: Express;
