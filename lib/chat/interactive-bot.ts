@@ -103,11 +103,13 @@ export function startInteractiveBot(
         // normal chat message
         interactiveChatClient
           .say(msg.channelName, `${msg.displayName}, ${response}`)
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           .catch(() => {});
       } else {
         // whisper
         interactiveChatClient
           .whisper(msg.senderUsername, response)
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           .catch(() => {});
       }
     };
