@@ -69,6 +69,10 @@ async function vacuumChannels(
   }
 }
 
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function vacuumMessages(
   messageStorage: MessageStorage,
   expiry: Duration,
@@ -79,10 +83,8 @@ async function vacuumMessages(
   const channelNames = await messageStorage.listChannelsWithMessages();
   const delayBetweenSteps = runInterval.asMilliseconds() / channelNames.length;
 
-  let delay = 0;
-
   for (const channelName of channelNames) {
-    setTimeout(async () => {
+    (async () => {
       const now = Date.now();
       const deleteBefore = now - expiry.asMilliseconds();
       const trimmed = await messageStorage.trimExpiredMessages(
@@ -91,8 +93,8 @@ async function vacuumMessages(
       );
       counter.inc(trimmed);
       runCounter.inc();
-    }, delay);
+    })();
 
-    delay += delayBetweenSteps;
+    await sleep(delayBetweenSteps);
   }
 }
