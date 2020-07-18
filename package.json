@@ -71,7 +71,7 @@
     "express-promise-router": "^3.0.3",
     "helmet": "^3.21.0",
     "ioredis": "^4.14.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "make-error-cause": "^2.2.1",
     "moment": "^2.24.0",
     "on-finished": "^2.3.0",
