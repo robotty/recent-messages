@@ -1,5 +1,7 @@
 # recent-messages
 
+**Preface: This version of recent-messages has been superseded by [recent-messages2](https://github.com/robotty/recent-messages2).**
+
 Twitch IRC bot and web service that serves the last N (by default 500) messages
 for chat clients to use when they join a channel.
 
